@@ -10,8 +10,6 @@ import os
 #
 # print page.code
 
-gafgfdsagsdgfdsfgsd
-
 error = "Usernames and password do not match or you do not have an"
 sussuc = "Control Panel"
 br = mechanize.Browser()
