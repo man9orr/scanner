@@ -9,7 +9,10 @@ import os
 # login = BeautifulSoup(page.read(), "lxml")
 #
 # print page.code
-error = "Username and password do not match or you do not have an"
+
+gafgfdsagsdgfdsfgsd
+
+error = "Usernames and password do not match or you do not have an"
 sussuc = "Control Panel"
 br = mechanize.Browser()
 br.set_handle_robots(False)
